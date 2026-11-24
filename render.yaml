@@ -1,0 +1,56 @@
+# Quick Sanjeevani — Render Blueprint (One-Click Deploy)
+# https://render.com/docs/blueprint-spec
+
+services:
+  # ─── Backend API Server ───
+  - type: web
+    name: quick-sanjeevani-api
+    runtime: node
+    region: singapore  # Closest to Bengaluru
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run seed
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false  # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: "*"
+
+  # ─── WhatsApp Bot Microservice ───
+  - type: web
+    name: quick-sanjeevani-whatsapp-bot
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: whatsapp-bot
+    buildCommand: npm install
+    startCommand: node src/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_NUMBER
+        value: "+14155238886"
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SERVER_URL
+        fromService:
+          name: quick-sanjeevani-api
+          type: web
+          property: host
