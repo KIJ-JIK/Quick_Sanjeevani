@@ -22,6 +22,7 @@ const TABLES = {
   MEDICINES: 'medicines',
   PRESCRIPTIONS: 'prescriptions',
   REMINDERS: 'reminders',
+  ORDERS: 'orders',
   SYNC_QUEUE: 'sync_queue',
 };
 
@@ -93,6 +94,27 @@ const schema = {
         updated_at: { type: 'number', default: () => Date.now() },
       },
       indices: ['id', 'prescription_id', 'user_id', 'status', 'sync_status'],
+    },
+
+    [TABLES.ORDERS]: {
+      name: TABLES.ORDERS,
+      primaryKey: 'id',
+      columns: {
+        id: { type: 'string', required: true },
+        order_number: { type: 'string', required: true, indexed: true },
+        items: { type: 'json', default: [] },
+        total_amount: { type: 'number', default: 0 },
+        pharmacy_name: { type: 'string', default: 'City Chemist (Yelahanka)' },
+        payment_status: { type: 'string', default: 'paid' },
+        payment_url: { type: 'string' },
+        fulfillment_status: { type: 'string', default: 'out_for_delivery', indexed: true },
+        delivery_address: { type: 'string' },
+        estimated_minutes: { type: 'number', default: 30 },
+        sync_status: { type: 'string', default: SYNC_STATUS.SYNCED, indexed: true },
+        created_at: { type: 'number', default: () => Date.now() },
+        updated_at: { type: 'number', default: () => Date.now() },
+      },
+      indices: ['id', 'order_number', 'fulfillment_status', 'sync_status'],
     },
 
     [TABLES.SYNC_QUEUE]: {

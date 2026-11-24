@@ -17,6 +17,8 @@ const medicineRouter = require('./routes/medicine.routes');
 const pharmacyRouter = require('./routes/pharmacy.routes');
 const prescriptionRouter = require('./routes/prescription.routes');
 const syncRouter = require('./routes/sync.routes');
+const orderRouter = require('./routes/order.routes');
+const companyRouter = require('./routes/company.routes');
 
 const app = express();
 
@@ -50,6 +52,8 @@ app.use('/api/medicines', medicineRouter);
 app.use('/api/pharmacies', pharmacyRouter);
 app.use('/api/prescriptions', prescriptionRouter);
 app.use('/api/sync', syncRouter);
+app.use('/api/orders', orderRouter);
+app.use('/api/company', companyRouter);
 
 // 404 Route Not Found Handler (RFC 7807)
 app.use(notFoundHandler);

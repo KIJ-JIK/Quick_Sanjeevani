@@ -383,6 +383,91 @@ async function run({ client }) {
     assert.strictEqual(res.status, 200);
   });
 
+  // =========================================================================
+  // Feature 9: Elder Medicine Ordering & Razorpay Payment Links - 5 Tests
+  // =========================================================================
+  await test('9.1 Order: Create medicine order with itemized list and calculate total', async () => {
+    const res = await client.post('/api/orders', {
+      customerPhone: '+919876543210',
+      items: [
+        { medicineName: 'Dolo 650', quantity: 2, unitPrice: 30.5 },
+        { medicineName: 'Pantocid 40mg', quantity: 1, unitPrice: 15.5 }
+      ]
+    });
+    assert.strictEqual(res.status, 201);
+    assert.ok(res.body.order.orderNumber.startsWith('QS-'));
+    assert.strictEqual(res.body.order.totalAmount, 76.5);
+  });
+
+  await test('9.2 Order: Automatically generate Razorpay UPI payment link', async () => {
+    const res = await client.post('/api/orders', {
+      customerPhone: '+919876543210',
+      items: [{ medicineName: 'Metformin 500mg', quantity: 1, unitPrice: 42 }]
+    });
+    assert.strictEqual(res.status, 201);
+    assert.ok(res.body.payment.paymentUrl.includes('rzp.io'));
+  });
+
+  await test('9.3 Order: Retrieve active orders for customer', async () => {
+    const res = await client.get('/api/orders?phone=%2B919876543210');
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.body.orders.length > 0);
+  });
+
+  await test('9.4 Order: Confirm payment via webhook/callback and update status', async () => {
+    const res = await client.post('/api/orders/QS-89210-410/pay', { paymentId: 'pay_test_12345' });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.order.payment.status, 'paid');
+  });
+
+  await test('9.5 Order: WhatsApp bot recognizes order intent and returns UPI payment link', async () => {
+    const payload = generateTwilioWebhook({ body: 'Dolo 650 bhej do' });
+    const res = await client.post('/api/whatsapp/webhook', payload, {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+    assert.strictEqual(res.status, 200);
+  });
+
+  // =========================================================================
+  // Feature 10: Company & Pharmacy Portal Architecture - 5 Tests
+  // =========================================================================
+  await test('10.1 Company: Aggregate operational dashboard KPIs and revenue', async () => {
+    const res = await client.get('/api/company/dashboard');
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.body.data.totalOrders >= 0);
+    assert.ok(res.body.data.grossMerchandiseValue > 0);
+  });
+
+  await test('10.2 Company: Retrieve partner pharmacy network roster', async () => {
+    const res = await client.get('/api/company/pharmacies');
+    assert.strictEqual(res.status, 200);
+    assert.ok(res.body.pharmacies.length > 0);
+  });
+
+  await test('10.3 Company: Pharmacist digital review & verification workflow', async () => {
+    const res = await client.patch('/api/company/prescriptions/rx_test_101/verify', {
+      pharmacistName: 'Pharmacist Ramesh Kumar (Reg #KA-PH-49201)',
+      pharmacistNotes: 'Approved for senior citizen'
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.status, 'success');
+  });
+
+  await test('10.4 Company: Pharmacy POS bulk inventory synchronization', async () => {
+    const res = await client.post('/api/company/inventory/sync', {
+      pharmacyId: 'ph_yelahanka_01',
+      items: [{ medicineName: 'Dolo 650', stock: 150 }]
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.updatedCount, 1);
+  });
+
+  await test('10.5 Company: Real-time pharmacy packing and dispatch queue', async () => {
+    const res = await client.get('/api/company/orders/queue');
+    assert.strictEqual(res.status, 200);
+    assert.ok(Array.isArray(res.body.queue));
+  });
+
   return tests;
 }
 

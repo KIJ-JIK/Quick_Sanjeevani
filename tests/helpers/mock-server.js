@@ -437,6 +437,108 @@ function createMockServer(options = {}) {
           });
         }
 
+        // 7. Orders Endpoints
+        if (pathname === '/api/orders' && method === 'POST') {
+          const { customerPhone, items = [] } = jsonBody;
+          if (!customerPhone || items.length === 0) {
+            return sendJson(400, { status: 400, detail: 'customerPhone and items required' });
+          }
+          const orderNumber = `QS-${Date.now().toString().slice(-6)}-101`;
+          const totalAmount = items.reduce((acc, i) => acc + (i.unitPrice || i.price || 45) * (i.quantity || 1), 0);
+          const order = {
+            orderNumber,
+            customerPhone,
+            items,
+            totalAmount,
+            pharmacyName: 'City Chemist & Druggist (Yelahanka)',
+            fulfillmentStatus: 'placed',
+            payment: {
+              status: 'link_generated',
+              paymentUrl: `https://rzp.io/l/qs_${orderNumber.toLowerCase()}`
+            }
+          };
+          return sendJson(201, { status: 'success', order, payment: order.payment });
+        }
+
+        if (pathname === '/api/orders' && method === 'GET') {
+          return sendJson(200, {
+            status: 'success',
+            count: 2,
+            orders: [
+              {
+                orderNumber: 'QS-89210-410',
+                totalAmount: 135,
+                fulfillmentStatus: 'out_for_delivery',
+                pharmacyName: 'City Chemist (Yelahanka)'
+              }
+            ]
+          });
+        }
+
+        if (pathname.startsWith('/api/orders/') && pathname.endsWith('/pay') && method === 'POST') {
+          return sendJson(200, {
+            status: 'success',
+            order: {
+              orderNumber: 'QS-89210-410',
+              fulfillmentStatus: 'packing',
+              payment: { status: 'paid', paidAt: new Date().toISOString() }
+            }
+          });
+        }
+
+        // 8. Company & Pharmacy Portal Endpoints
+        if (pathname === '/api/company/dashboard' && method === 'GET') {
+          return sendJson(200, {
+            status: 'success',
+            data: {
+              totalOrders: 148,
+              activeOrders: 12,
+              prescriptionsPendingVerification: 5,
+              totalPartnerPharmacies: 5,
+              catalogMedicinesCount: state.medicines.length,
+              grossMerchandiseValue: 18450
+            }
+          });
+        }
+
+        if (pathname === '/api/company/pharmacies' && method === 'GET') {
+          return sendJson(200, {
+            status: 'success',
+            count: state.pharmacies.length,
+            pharmacies: state.pharmacies
+          });
+        }
+
+        if (pathname.includes('/api/company/prescriptions/') && pathname.endsWith('/verify') && method === 'PATCH') {
+          return sendJson(200, {
+            status: 'success',
+            message: 'Prescription verified and approved for dispensing',
+            verifiedBy: jsonBody.pharmacistName || 'Pharmacist Ramesh Kumar (Reg #KA-PH-49201)'
+          });
+        }
+
+        if (pathname === '/api/company/inventory/sync' && method === 'POST') {
+          return sendJson(200, {
+            status: 'success',
+            message: 'Successfully synchronized inventory',
+            updatedCount: (jsonBody.items || []).length
+          });
+        }
+
+        if (pathname === '/api/company/orders/queue' && method === 'GET') {
+          return sendJson(200, {
+            status: 'success',
+            count: 1,
+            queue: [
+              {
+                orderNumber: 'QS-892104-102',
+                customerName: 'Smt. Shanta Devi',
+                fulfillmentStatus: 'packing'
+              }
+            ]
+          });
+        }
+
         // 7. WhatsApp Webhook Endpoint
         if ((pathname === '/api/whatsapp/webhook' || pathname === '/webhook') && method === 'POST') {
           const startMs = Date.now();

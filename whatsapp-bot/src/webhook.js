@@ -143,6 +143,45 @@ async function processIncomingMessage(payload = {}) {
         replyText = templates.helpMenu(lang);
         break;
 
+      case intentService.INTENTS.ORDER_MEDICINE: {
+        const medName = intentResult.entities?.medicine || 'Dolo 650';
+        const found = searchCatalog(medName);
+        const unitPrice = found ? Number(found.price || 30.50) : 45.00;
+        const displayName = found ? found.name : medName;
+        const orderNumber = `QS-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
+
+        const simulatedOrder = {
+          orderNumber,
+          customerPhone: from,
+          items: [{ medicineName: displayName, quantity: 1, subtotal: unitPrice }],
+          totalAmount: unitPrice,
+          pharmacyName: 'City Chemist & Druggist (Yelahanka)',
+          estimatedDeliveryMinutes: 25,
+          paymentUrl: `https://rzp.io/l/qs_${orderNumber.toLowerCase()}`
+        };
+
+        replyText = templates.orderPlaced(simulatedOrder, lang);
+
+        if (lang === 'hi' || body.toLowerCase().includes('voice') || body.toLowerCase().includes('audio')) {
+          const ttsRes = await ttsService.generateVoiceNote({
+            text: `Aapka ${displayName} ka order darj kar liya gaya hai. Payment link WhatsApp par bhej diya gaya hai. City Chemist se 25 minute me dawai pahunch jayegi.`,
+            language: lang
+          });
+          audioUrl = ttsRes.audioUrl;
+        } else if (lang === 'kn') {
+          const ttsRes = await ttsService.generateVoiceNote({
+            text: `Nimma ${displayName} aushadhi order sweekarisalaagide. UPI link kaluhisalaagide.`,
+            language: lang
+          });
+          audioUrl = ttsRes.audioUrl;
+        }
+        break;
+      }
+
+      case intentService.INTENTS.REFILL:
+        replyText = templates.refillSummary([], lang);
+        break;
+
       case intentService.INTENTS.EMERGENCY:
         replyText = templates.emergencyAlert(lang);
         break;

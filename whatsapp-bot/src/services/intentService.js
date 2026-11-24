@@ -19,6 +19,8 @@ const INTENTS = {
   PHARMACY: 'PHARMACY',
   PRESCRIPTION_UPLOAD: 'PRESCRIPTION_UPLOAD',
   HELP: 'HELP',
+  ORDER_MEDICINE: 'ORDER_MEDICINE',
+  REFILL: 'REFILL',
   EMERGENCY: 'EMERGENCY',
   VOICE_REQUEST: 'VOICE_REQUEST',
   UNKNOWN: 'UNKNOWN'
@@ -148,6 +150,17 @@ function matchTier1(text = '') {
     };
   }
 
+  if (/^6(\s+.*|$)/.test(trimmed)) {
+    const medQuery = extractMedicineQuery(trimmed.replace(/^6[\s.:\-)#]*/, ''));
+    return {
+      intent: INTENTS.ORDER_MEDICINE,
+      confidence: 0.98,
+      language: lang,
+      entities: { medicine: medQuery || 'Dolo 650', raw: trimmed },
+      tier: 1
+    };
+  }
+
   // 3. Greetings
   const greetingRegex = /^(hi|hello|hey|namaste|namaskar|namaskara|vanakkam|pranam|halo|salaam|good morning|good afternoon|good evening|kaise ho|hegiddira|नमस्ते|ಪ್ರಣಾಮ|ನಮಸ್ಕಾರ)[\s!.,?]*$/i;
   if (greetingRegex.test(lower) || /^(hi|hello|hey|namaste|namaskara)\b/i.test(lower)) {
@@ -225,7 +238,32 @@ function matchTier1(text = '') {
     };
   }
 
-  // 9. Medicine Search (Keywords, Phrases, Devanagari/Kannada)
+  // 9. Refill Intent
+  const refillRegex = /\b(refill|reorder|repeat medicine|phir se|fir se|repeat prescription|मತ್ತೆ ಕಳಿಸಿ|ಮತ್ತೆ ಬೇಕು|फिर से भेजो|रिफिल)\b/i;
+  if (refillRegex.test(lower) || /(रिफिल|ಮತ್ತೆ ಬೇಕು)/i.test(trimmed)) {
+    return {
+      intent: INTENTS.REFILL,
+      confidence: 0.95,
+      language: lang,
+      entities: { raw: trimmed },
+      tier: 1
+    };
+  }
+
+  // 10. Order Medicine & Payment Link Intent
+  const orderRegex = /\b(order|mangwa do|mangwa do|bhej do|buy|kharidna|purchase|payment link|pay|deliver|ghar bhej do|dawa bhej do|dawai bhej do|ಆರ್ಡರ್|ಖರೀದಿಸಿ|ಕಳುಹಿಸಿ|मँगवा दो|भेज दो|खरीदना|ऑर्डर)\b/i;
+  if (orderRegex.test(lower) || /(ऑर्डर|मँगवा दो|भेज दो|ಆರ್ಡರ್|ಖರೀದಿಸಿ)/i.test(trimmed)) {
+    const medQuery = extractMedicineQuery(trimmed.replace(/(order|mangwa do|bhej do|buy|kharidna|purchase|payment|link|deliver|dawai|dawa|please|kripya|ಆರ್ಡರ್|ಖರೀದಿಸಿ|ಮँगवा दो|भेज दो)/gi, '').trim());
+    return {
+      intent: INTENTS.ORDER_MEDICINE,
+      confidence: 0.94,
+      language: lang,
+      entities: { medicine: medQuery || 'Dolo 650', raw: trimmed },
+      tier: 1
+    };
+  }
+
+  // 11. Medicine Search (Keywords, Phrases, Devanagari/Kannada)
   const medSearchRegex = /(search|find|lookup|dawai|dawa|medicine|tablets|tablet|syrup|capsule|दवाई|दवा|ಔಷಧಿ|औषಧಿ|chahiye|khojo|khoje)/i;
   if (medSearchRegex.test(lower)) {
     const medQuery = extractMedicineQuery(trimmed);

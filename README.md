@@ -3,7 +3,7 @@
 
 [![wHACKiest 2026](https://img.shields.io/badge/wHACKiest-2026_Ideathon-00897B?style=for-the-badge)](https://devnovate.com)
 [![Track 3](https://img.shields.io/badge/Track-3:_Know_Thyself-FF7043?style=for-the-badge)](#)
-[![Status](https://img.shields.io/badge/Build-Passing_(66%2F66_Tests)-43A047?style=for-the-badge)](#)
+[![Status](https://img.shields.io/badge/Build-Passing_(76%2F76_Tests)-43A047?style=for-the-badge)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 > **wHACKiest 2026 Online Ideathon (26–27 Nov 2026)**  
@@ -37,9 +37,11 @@ A 70-year-old grandparent can simply send a voice note in **Hindi or Kannada** (
 | Feature | Tata 1mg / PharmEasy | Apollo 24/7 | **Quick Sanjeevani** |
 |:---|:---:|:---:|:---:|
 | **Elderly WhatsApp Voice Bot** | ❌ None | ❌ None | **✅ Native WhatsApp bot + Voice Notes in Hindi/Kannada** |
+| **WhatsApp Ordering & UPI Links** | ❌ Complex App | ❌ Complex App | **✅ 1-Tap Ordering + Razorpay UPI Links via WhatsApp** |
 | **Offline-First Architecture** | ❌ Web-only | ❌ Online-only | **✅ Full offline operation via SQLite/WatermelonDB** |
 | **Pharmacy Network** | ❌ Central warehouse | ⚠️ Chain stores | **✅ Hyperlocal neighborhood chemist network (sub-30 min)** |
 | **Prescription OCR + AI** | ⚠️ Upload only | ⚠️ Upload only | **✅ Auto-extraction, dosage parsing & safety flags** |
+| **Company & Pharmacy Portal** | ⚠️ Disjointed | ⚠️ Disjointed | **✅ Unified APIs for Pharmacist verification & POS sync** |
 | **4-Layer Crash Resilience** | ❌ Standard | ❌ Standard | **✅ Supervised, auto-reconnecting, circuit-breakered API** |
 | **Multilingual Voice (TTS)** | ❌ None | ❌ None | **✅ ElevenLabs Multilingual v2 Voice Synthesis** |
 

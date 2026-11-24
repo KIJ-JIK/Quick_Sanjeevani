@@ -12,6 +12,7 @@ const Header = require('./src/components/Header');
 const DashboardScreen = require('./src/screens/DashboardScreen');
 const MedicineSearchScreen = require('./src/screens/MedicineSearchScreen');
 const PrescriptionsScreen = require('./src/screens/PrescriptionsScreen');
+const OrdersScreen = require('./src/screens/OrdersScreen');
 const SettingsScreen = require('./src/screens/SettingsScreen');
 const { db } = require('./src/database');
 const { api } = require('./src/services/apiService');
@@ -22,6 +23,7 @@ const TABS = [
   { id: 'dashboard', labelKey: 'tabDashboard', icon: '💊' },
   { id: 'search', labelKey: 'tabSearch', icon: '🔍' },
   { id: 'prescriptions', labelKey: 'tabPrescriptions', icon: '📋' },
+  { id: 'orders', labelKey: 'tabOrders', icon: '🛍️' },
   { id: 'settings', labelKey: 'tabSettings', icon: '⚙️' },
 ];
 
@@ -62,6 +64,11 @@ function AppContent({ initialTab = 'dashboard', initialLanguage = 'en', isOfflin
           db: activeDb,
           language,
         });
+      case 'orders':
+        return React.createElement(OrdersScreen, {
+          db: activeDb,
+          language,
+        });
       case 'settings':
         return React.createElement(SettingsScreen, {
           db: activeDb,
@@ -87,6 +94,8 @@ function AppContent({ initialTab = 'dashboard', initialLanguage = 'en', isOfflin
         return t('tabSearch', language);
       case 'prescriptions':
         return t('tabPrescriptions', language);
+      case 'orders':
+        return t('tabOrders', language);
       case 'settings':
         return t('tabSettings', language);
       default:

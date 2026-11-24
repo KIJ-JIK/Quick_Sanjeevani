@@ -17,7 +17,8 @@ function welcome(lang = 'en') {
       `2️⃣ *दवाई का समय / रिमाइंडर* (उदा. "2 Reminder" या "दवाई का समय")\n` +
       `3️⃣ *आस-पास का मेडिकल स्टोर* (उदा. "3 Pharmacy" या "दवा की दुकान")\n` +
       `4️⃣ *पर्ची भेजें* (डॉक्टर की पर्ची की फ़ोटो भेजें)\n` +
-      `5️⃣ *मदद और आपातकालीन सेवा* (उदा. "5 Help" या "मदद")\n\n` +
+      `5️⃣ *मदद और आपातकालीन सेवा* (उदा. "5 Help" या "मदद")\n` +
+      `6️⃣ *दवाई मँगवाएं / ऑर्डर करें* (उदा. "6 Order" या "Dolo भेज दो")\n\n` +
       `👉 आप सीधे अपनी समस्या या बोलकर ऑडियो संदेश भी भेज सकते हैं।`
     );
   }
@@ -31,7 +32,8 @@ function welcome(lang = 'en') {
       `2️⃣ *ಔಷಧಿ ಜ್ಞಾಪನೆಗಳು* (ಉದಾ. "2 Reminder" ಅಥವಾ "ಸಮಯ ತಿಳಿಸಿ")\n` +
       `3️⃣ *ಹತ್ತಿರದ ಔಷಧಾಲಯ* (ಉದಾ. "3 Pharmacy" ಅಥವಾ "ಮೆಡಿಕಲ್ ಶಾಪ್")\n` +
       `4️⃣ *ವೈದ್ಯರ ಚೀಟಿ ಕಳುಹಿಸಿ* (ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್ ಫೋಟೋ ಕಳುಹಿಸಿ)\n` +
-      `5️⃣ *ಸಹಾಯ ಮತ್ತು ತುರ್ತು ಸೇವೆ* (ಉದಾ. "5 Help" ಅಥವಾ "ಸಹಾಯ")\n\n` +
+      `5️⃣ *ಸಹಾಯ ಮತ್ತು ತುರ್ತು ಸೇವೆ* (ಉದಾ. "5 Help" ಅಥವಾ "ಸಹಾಯ")\n` +
+      `6️⃣ *ಔಷಧಿ ಆರ್ಡರ್ ಮಾಡಿ* (ಉದಾ. "6 Order" ಅಥವಾ "Dolo ಕಳುಹಿಸಿ")\n\n` +
       `👉 ನೀವು ವಾಯ್ಸ್ ಮೆಸೇಜ್ ಕೂಡ ಕಳುಹಿಸಬಹುದು.`
     );
   }
@@ -44,7 +46,8 @@ function welcome(lang = 'en') {
     `2️⃣ *Medication Reminders* (e.g. "2 Reminder" or "my schedule")\n` +
     `3️⃣ *Nearby Pharmacy* (e.g. "3 Pharmacy" or "chemist near me")\n` +
     `4️⃣ *Send Prescription* (Upload a prescription photo)\n` +
-    `5️⃣ *Help & Emergency* (e.g. "5 Help" or "emergency")\n\n` +
+    `5️⃣ *Help & Emergency* (e.g. "5 Help" or "emergency")\n` +
+    `6️⃣ *Order Medicine & Pay* (e.g. "6 Order" or "Send Dolo")\n\n` +
     `👉 You can also reply in Hindi, Kannada, or send a voice message!`
   );
 }
@@ -359,7 +362,99 @@ function generalFallback(lang = 'en') {
     `2️⃣ Medication schedule / Reminders\n` +
     `3️⃣ Find nearby pharmacies\n` +
     `4️⃣ Send prescription photo\n` +
-    `5️⃣ Help menu`
+    `5️⃣ Help menu\n` +
+    `6️⃣ Order medicine / Refill`
+  );
+}
+
+/**
+ * Format Order Placed confirmation with Razorpay UPI payment link
+ */
+function orderPlaced(order = {}, lang = 'en') {
+  const orderNum = order.orderNumber || 'QS-89210-410';
+  const amount = Number(order.totalAmount || 45).toFixed(2);
+  const payUrl = order.paymentUrl || `https://rzp.io/l/qs_${orderNum.toLowerCase()}`;
+  const pharmacy = order.pharmacyName || 'City Chemist (Yelahanka)';
+  const eta = order.estimatedDeliveryMinutes || 30;
+  const itemsText = Array.isArray(order.items) && order.items.length > 0
+    ? order.items.map(i => `• ${i.medicineName || i.name} (Qty: ${i.quantity || 1}) - ₹${i.subtotal || i.price || 45}`).join('\n')
+    : '• Dolo 650 (Paracetamol) (1 strip) - ₹30.50\n• Pantocid 40mg (1 strip) - ₹15.50';
+
+  if (lang === 'hi') {
+    return (
+      `🛍️ *दवाई का ऑर्डर तैयार है!*\n` +
+      `━━━━━━━━━━━━━━━━━━\n` +
+      `📦 *ऑर्डर नंबर:* \`${orderNum}\`\n` +
+      `🏪 *नज़दीकी मेडिकल स्टोर:* ${pharmacy}\n` +
+      `⏱️ *डिलीवरी समय:* लगभग ${eta} मिनट में\n\n` +
+      `📋 *दवाइयाँ:*\n${itemsText}\n\n` +
+      `💰 *कुल राशि:* ₹${amount}\n\n` +
+      `💳 *सुरक्षित UPI पेमेंट लिंक:*\n${payUrl}\n\n` +
+      `👆 *ऊपर दिए गए लिंक पर क्लिक करें* और Google Pay, PhonePe, Paytm या BHIM से भुगतान करें।\n\n` +
+      `✅ पेमेंट मिलते ही डिलीवरी एजेंट आपके पते पर दवा पहुँचा देगा।`
+    );
+  }
+
+  if (lang === 'kn') {
+    return (
+      `🛍️ *ಔಷಧಿ ಆರ್ಡರ್ ಸಿದ್ಧವಾಗಿದೆ!*\n` +
+      `━━━━━━━━━━━━━━━━━━\n` +
+      `📦 *ಆರ್ಡರ್ ಸಂಖ್ಯೆ:* \`${orderNum}\`\n` +
+      `🏪 *ಮೆಡಿಕಲ್ ಶಾಪ್:* ${pharmacy}\n` +
+      `⏱️ *ತಲುಪುವ ಸಮಯ:* ಸುಮಾರು ${eta} ನಿಮಿಷಗಳಲ್ಲಿ\n\n` +
+      `📋 *ಔಷಧಿಗಳು:*\n${itemsText}\n\n` +
+      `💰 *ಒಟ್ಟು ಮೊತ್ತ:* ₹${amount}\n\n` +
+      `💳 *UPI ಪಾವತಿ ಲಿಂಕ್:*\n${payUrl}\n\n` +
+      `👆 *ಲಿಂಕ್ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ* Google Pay ಅಥವಾ PhonePe ಮೂಲಕ ಪಾವತಿಸಿ.\n` +
+      `✅ ಪಾವತಿಯ ನಂತರ ಔಷಧಿ ನಿಮ್ಮ ಮನೆಗೆ ತಲುಪಿಸಲಾಗುತ್ತದೆ.`
+    );
+  }
+
+  return (
+    `🛍️ *Medication Order Placed Successfully!*\n` +
+    `━━━━━━━━━━━━━━━━━━\n` +
+    `📦 *Order Number:* \`${orderNum}\`\n` +
+    `🏪 *Assigned Chemist:* ${pharmacy}\n` +
+    `⏱️ *Estimated Delivery:* ~${eta} mins (Hyperlocal)\n\n` +
+    `📋 *Items:*\n${itemsText}\n\n` +
+    `💰 *Total Amount:* ₹${amount}\n\n` +
+    `💳 *Secure UPI Payment Link:*\n${payUrl}\n\n` +
+    `👆 *Click the link above* to pay via UPI (Google Pay, PhonePe, Paytm) or Card.\n\n` +
+    `✅ Your order will be dispatched as soon as payment is confirmed.`
+  );
+}
+
+/**
+ * Format Refill Summary
+ */
+function refillSummary(medicines = [], lang = 'en') {
+  if (lang === 'hi') {
+    return (
+      `🔄 *दवाई रिफिल (Refill Request)*\n` +
+      `━━━━━━━━━━━━━━━━━━\n` +
+      `आपकी पिछली दवाइयाँ:\n` +
+      `1. Metformin 500mg (1 strip) - ₹45\n` +
+      `2. Amlodipine 5mg (1 strip) - ₹38\n\n` +
+      `👉 इन दवाइयों को तुरंत ऑर्डर करने के लिए *"6"* या *"Order"* लिखकर भेजें।`
+    );
+  }
+  if (lang === 'kn') {
+    return (
+      `🔄 *ಔಷಧಿ ರಿಫಿಲ್ (Refill Request)*\n` +
+      `━━━━━━━━━━━━━━━━━━\n` +
+      `ನಿಮ್ಮ ಹಿಂದಿನ ಔಷಧಿಗಳು:\n` +
+      `1. Metformin 500mg (1 strip) - ₹45\n` +
+      `2. Amlodipine 5mg (1 strip) - ₹38\n\n` +
+      `👉 ಪುನಃ ಆರ್ಡರ್ ಮಾಡಲು *"6"* ಅಥವಾ *"Order"* ಎಂದು ಕಳುಹಿಸಿ.`
+    );
+  }
+  return (
+    `🔄 *Medication Refill Request*\n` +
+    `━━━━━━━━━━━━━━━━━━\n` +
+    `Your chronic medications available for refill:\n` +
+    `1. Metformin 500mg (1 strip) - ₹45\n` +
+    `2. Amlodipine 5mg (1 strip) - ₹38\n\n` +
+    `👉 To confirm this refill order, reply with *"6"* or *"Order"*.`
   );
 }
 
@@ -372,5 +467,7 @@ module.exports = {
   prescriptionExtracted,
   emergencyAlert,
   helpMenu,
-  generalFallback
+  generalFallback,
+  orderPlaced,
+  refillSummary,
 };
