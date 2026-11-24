@@ -952,9 +952,36 @@
       }
     }
 
+    // Auto-route on query param or hash for automated capture & direct linking
+    function initRoute() {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || window.location.hash.replace('#', '');
+      if (tab && document.getElementById(tab)) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(tab));
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+      if (params.get('action') === 'order') {
+        sendChat('Dolo 650 bhej do');
+      } else if (params.get('action') === 'search') {
+        const input = document.getElementById('catalog-search');
+        if (input) {
+          input.value = 'Paracetamol';
+          filterMeds();
+        }
+      } else if (params.get('action') === 'verify') {
+        verifyPrescription();
+      } else if (params.get('action') === 'ocr') {
+        simulateOCR();
+      }
+    }
+
     // Init
     filterMeds();
     renderPharmacies();
+    initRoute();
   </script>
 </body>
 </html>
