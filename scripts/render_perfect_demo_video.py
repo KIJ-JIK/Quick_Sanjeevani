@@ -13,15 +13,17 @@ FINAL_OUT = os.path.join(BASE_DIR, "quick_sanjeevani_live_demo.mp4")
 FPS = 30
 WIDTH = 1920
 HEIGHT = 1080
+TOTAL_DURATION = 76.0  # Full speech is 73.39s + 2.61s outro hold & fade-out
+TOTAL_FRAMES = int(TOTAL_DURATION * FPS)
 
 ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
 
-# Subtitle timeline matching audio voiceover exactly
+# Exact sentence timing verified against audio energy waveform
 SUBTITLES = [
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene1_elder_app.png"),
         "t_start": 0.0,
-        "t_end": 6.0,
+        "t_end": 3.5,
         "tag": "TAB 1/5: ELDER COMPANION",
         "header": "📱 ELDER MOBILE COMPANION APP",
         "text": "Here is our live deployed application on GitHub Pages.",
@@ -29,35 +31,35 @@ SUBTITLES = [
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene1_elder_app.png"),
-        "t_start": 6.0,
-        "t_end": 14.0,
+        "t_start": 3.5,
+        "t_end": 14.5,
         "tag": "TAB 1/5: ELDER COMPANION",
         "header": "👵 ACCESSIBILITY & OFFLINE PERSISTENCE",
-        "text": "We start with the Elder Companion interface: 48px touch targets, high contrast, and zero-crash offline SQLite storage.",
+        "text": "We start with the Elder Companion interface, specifically engineered with 48-pixel touch targets, high contrast typography, and zero-crash offline SQLite storage for our senior citizens.",
         "highlight": "48px Touch Targets · High Contrast AAA · Offline SQLite Resilience"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene2_whatsapp_bot.png"),
-        "t_start": 14.0,
-        "t_end": 21.5,
+        "t_start": 14.5,
+        "t_end": 22.0,
         "tag": "TAB 2/5: WHATSAPP BOT",
         "header": "💬 MULTILINGUAL WHATSAPP VOICE BOT",
-        "text": "Next, our multilingual WhatsApp Voice Bot: an elder simply says \"Dolo 650 bhej do\".",
+        "text": "Next, our multilingual WhatsApp Voice Bot. An elder simply says: \"Dolo 650 bhej do\".",
         "highlight": "Voice Order: 'Dolo 650 bhej do' · Hindi · Kannada · English"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene2_whatsapp_bot.png"),
-        "t_start": 21.5,
-        "t_end": 30.0,
+        "t_start": 22.0,
+        "t_end": 31.5,
         "tag": "TAB 2/5: WHATSAPP BOT",
         "header": "⚡ 50MS WEBHOOK & 1-TAP RAZORPAY UPI",
-        "text": "Sub-50ms webhook acknowledgment, multi-language speech, and instant Razorpay UPI card right in chat.",
-        "highlight": "Instant UPI Card in WhatsApp · Solves Business API Limitations"
+        "text": "The system parses speech in Hindi, English, or Kannada, acknowledges under 50 milliseconds, and delivers an instant 1-tap Razorpay UPI payment card right in chat.",
+        "highlight": "Sub-50ms ACK · Instant UPI Card in WhatsApp · Direct Settlement"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene3_catalog.png"),
-        "t_start": 30.0,
-        "t_end": 37.2,
+        "t_start": 31.5,
+        "t_end": 36.0,
         "tag": "TAB 3/5: MEDICINE CATALOG",
         "header": "💊 62-MEDICINE HYPERLOCAL CATALOG",
         "text": "Here is our live medicine catalog of 62 pre-seeded formulations.",
@@ -65,53 +67,50 @@ SUBTITLES = [
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene3_catalog.png"),
-        "t_start": 37.2,
-        "t_end": 45.0,
+        "t_start": 36.0,
+        "t_end": 43.5,
         "tag": "TAB 3/5: MEDICINE CATALOG",
         "header": "🔍 FUZZY SALT SEARCH & GENERIC MATCHING",
-        "text": "Fuzzy search instantly resolves generic salt alternatives, verified MRPs, and real-time strip availability.",
+        "text": "Fuzzy search instantly resolves generic salt alternatives, verified MRPs, and real-time strip availability across Bengaluru.",
         "highlight": "Instant Generic Salt Substitutions · Schedule H / Rx Filtering"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene4_pharmacy_network.png"),
-        "t_start": 45.0,
-        "t_end": 52.0,
+        "t_start": 43.5,
+        "t_end": 54.5,
         "tag": "TAB 4/5: CHEMIST GRID",
         "header": "🏪 BENGALURU CHEMIST DELIVERY GRID",
-        "text": "Orders route automatically to our hyperlocal Bengaluru chemist grid.",
-        "highlight": "Hyperlocal Proximity Matching · Pincode 560064 Network"
-    },
-    {
-        "scene_file": os.path.join(FRAMES_DIR, "scene4_pharmacy_network.png"),
-        "t_start": 52.0,
-        "t_end": 59.5,
-        "tag": "TAB 4/5: CHEMIST GRID",
-        "header": "📍 0.2KM TO 0.8KM NEIGHBORHOOD CHEMISTS",
-        "text": "Connecting registered neighborhood pharmacies—from Presidency Gate to Yelahanka—for 15 to 30 minute delivery.",
+        "text": "Orders route automatically to our hyperlocal chemist grid, connecting registered neighborhood pharmacies, from Presidency University Gate to Yelahanka, guaranteeing 15 to 30 minute doorstep delivery.",
         "highlight": "Presidency University Gate (0.2km) · 15 to 30 Min Doorstep Delivery"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene5_company_portal.png"),
-        "t_start": 59.5,
-        "t_end": 67.0,
+        "t_start": 54.5,
+        "t_end": 66.5,
         "tag": "TAB 5/5: PHARMACY PORTAL",
         "header": "🏢 PHARMACIST DIGITAL STAMP VERIFICATION",
-        "text": "Finally, the Pharmacy Verification Portal: licensed pharmacists digitally sign every prescription before dispatch.",
-        "highlight": "Pharmacist License Stamp: KA-PH-49201 · Legal & Clinical Compliance"
+        "text": "Finally, the Pharmacy Verification Portal. Licensed pharmacists digitally sign every prescription before dispatch, backed by an end-to-end architecture validated by 76 passing automated tests.",
+        "highlight": "Pharmacist License Stamp: KA-PH-49201 · 76/76 Automated Tests Pass"
     },
     {
         "scene_file": os.path.join(FRAMES_DIR, "scene5_company_portal.png"),
-        "t_start": 67.0,
-        "t_end": 74.0,
-        "tag": "TAB 5/5: PHARMACY PORTAL",
-        "header": "✅ 76/76 AUTOMATED TESTS PASSED (100%)",
-        "text": "Backed by an end-to-end architecture validated by 76 passing automated tests. Quick Sanjeevani.",
-        "highlight": "Full E2E Automated Coverage · Reliable Healthcare for Every Elder"
+        "t_start": 66.5,
+        "t_end": 71.8,
+        "tag": "MISSION COMPLETE",
+        "header": "🌿 HEALTHCARE ACCESSIBILITY FOR EVERY ELDER",
+        "text": "Quick Sanjeevani: making healthcare accessible, reliable, and gentle for every elder.",
+        "highlight": "Offline-First SQLite · WhatsApp Voice AI · Hyperlocal Delivery"
+    },
+    {
+        "scene_file": os.path.join(FRAMES_DIR, "scene5_company_portal.png"),
+        "t_start": 71.8,
+        "t_end": 76.0,
+        "tag": "THANK YOU",
+        "header": "🙏 THANK YOU!",
+        "text": "Thank you! Team Hot Chocolate Fudge · Track 3: Know Thyself · Presidency University.",
+        "highlight": "Repository: https://github.com/KIJ-JIK/Quick_Sanjeevani"
     }
 ]
-
-TOTAL_DURATION = 74.0
-TOTAL_FRAMES = int(TOTAL_DURATION * FPS)
 
 # Load fonts
 try:
@@ -156,13 +155,17 @@ def draw_frame(t, frame_idx):
     cropped = base[y1:y1+h_z, x1:x1+w_z]
     current = cv2.resize(cropped, (WIDTH, HEIGHT))
 
+    # Fade out transition during the last 1.5 seconds (74.5s -> 76.0s)
+    if t > 74.5:
+        fade_alpha = max(0.0, (TOTAL_DURATION - t) / 1.5)
+        current = cv2.convertScaleAbs(current, alpha=fade_alpha)
+
     # Convert to PIL
     pil_img = Image.fromarray(cv2.cvtColor(current, cv2.COLOR_BGR2RGB))
     draw = ImageDraw.Draw(pil_img, "RGBA")
 
     # 1. Top status header
     draw.rectangle([(0, 0), (WIDTH, 48)], fill=(10, 15, 25, 240))
-    # Pulsing live dot
     dot_color = (0, 230, 118, 255) if (frame_idx // 15) % 2 == 0 else (0, 200, 83, 255)
     draw.ellipse([(28, 16), (44, 32)], fill=dot_color)
     draw.text((54, 12), "LIVE DEPLOYED DEMONSTRATION · QUICK SANJEEVANI", font=font_top, fill=(255, 255, 255, 255))
@@ -176,9 +179,10 @@ def draw_frame(t, frame_idx):
     box_y2 = HEIGHT - 24
 
     # Background card (deep glass rounded box with double border)
-    draw.rounded_rectangle([(box_x1, box_y1), (box_x2, box_y2)], radius=18, fill=(8, 14, 26, 248), outline=(0, 150, 136, 255), width=3)
+    box_fill = (8, 14, 26, 248) if t <= 74.5 else (8, 14, 26, int(248 * max(0.0, (TOTAL_DURATION - t) / 1.5)))
+    draw.rounded_rectangle([(box_x1, box_y1), (box_x2, box_y2)], radius=18, fill=box_fill, outline=(0, 150, 136, 255), width=3)
 
-    # Accent tab badge (e.g. TAB 2/5: WHATSAPP BOT)
+    # Accent tab badge
     tag_w = 320
     draw.rounded_rectangle([(box_x1 + 24, box_y1 + 16), (box_x1 + 24 + tag_w, box_y1 + 52)], radius=8, fill=(0, 121, 107, 255))
     draw.text((box_x1 + 38, box_y1 + 22), sub["tag"], font=font_tag, fill=(255, 255, 255, 255))
@@ -198,7 +202,7 @@ def draw_frame(t, frame_idx):
     draw.rounded_rectangle([(box_x1 + 28, box_y2 - 12), (box_x1 + 28 + p_bar_w, box_y2 - 6)], radius=3, fill=(0, 230, 118, 255))
 
     # Global video progress line at very bottom edge
-    global_p = t / TOTAL_DURATION
+    global_p = min(1.0, t / TOTAL_DURATION)
     draw.rectangle([(0, HEIGHT - 4), (int(WIDTH * global_p), HEIGHT)], fill=(255, 215, 64, 255))
 
     return cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
@@ -222,15 +226,14 @@ cmd = [
     "-pix_fmt", "yuv420p",
     "-profile:v", "high",
     "-level", "4.1",
-    # Audio encoding: AAC stereo 44.1kHz with volume normalization boost
+    # Audio encoding: AAC stereo 44.1kHz with volume boost and pad to match total video duration
     "-c:a", "aac",
     "-ar", "44100",
     "-ac", "2",
     "-b:a", "256k",
-    "-filter:a", "volume=2.2,loudnorm=I=-16:TP=-1.5:LRA=11",
+    "-filter:a", "volume=2.2,loudnorm=I=-16:TP=-1.5:LRA=11,apad=pad_dur=4",
     # Faststart: web-optimized moov atom at beginning
     "-movflags", "+faststart",
-    "-shortest",
     "-t", str(TOTAL_DURATION),
     FINAL_OUT
 ]
