@@ -1,0 +1,39 @@
+{
+  "name": "quick-sanjeevani-server",
+  "version": "1.0.0",
+  "description": "Crash-Resilient Modular Backend API for Quick Sanjeevani",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --detectOpenHandles --runInBand",
+    "seed": "node src/seeds/seed.js",
+    "seed:validate": "node src/seeds/seed.js --validate"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "envalid": "^8.0.0",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "opossum": "^8.1.4",
+    "winston": "^3.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.2",
+    "supertest": "^7.0.0"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "resilience",
+    "circuit-breaker",
+    "healthcare-api"
+  ],
+  "author": "Hot Chocolate Fudge",
+  "license": "MIT"
+}

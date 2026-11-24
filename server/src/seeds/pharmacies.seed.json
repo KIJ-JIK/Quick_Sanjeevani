@@ -1,0 +1,152 @@
+[
+  {
+    "name": "City Pharmacy & Healthcare",
+    "phone": "+91-80-2856-1122",
+    "licenseNumber": "KA-BLR-2021-08912",
+    "address": {
+      "street": "#14, NES Office Circle, BB Road",
+      "area": "Yelahanka Old Town",
+      "city": "Bengaluru",
+      "pincode": "560064"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [77.5963, 13.1007]
+    },
+    "rating": 4.7,
+    "openingHours": "07:30 - 23:00",
+    "inventory": [
+      { "medicineName": "Dolo 650", "stock": 85, "priceOverride": 34.00 },
+      { "medicineName": "Crocin 500", "stock": 60, "priceOverride": 20.00 },
+      { "medicineName": "Metformin 500mg", "stock": 120, "priceOverride": 28.00 },
+      { "medicineName": "Telma 40", "stock": 90, "priceOverride": 125.00 },
+      { "medicineName": "Augmentin 625", "stock": 45, "priceOverride": 200.00 },
+      { "medicineName": "Pan 40", "stock": 110, "priceOverride": 150.00 },
+      { "medicineName": "Montair LC", "stock": 70, "priceOverride": 215.00 },
+      { "medicineName": "Shelcal 500", "stock": 130, "priceOverride": 130.00 },
+      { "medicineName": "Thyronorm 50mcg", "stock": 80, "priceOverride": 140.00 },
+      { "medicineName": "Betadine 10% Ointment", "stock": 50, "priceOverride": 112.00 }
+    ],
+    "stockFreshnessTimestamp": "2026-11-24T12:00:00.000Z"
+  },
+  {
+    "name": "MedPlus Pharmacy Yelahanka New Town",
+    "phone": "+91-80-2856-4433",
+    "licenseNumber": "KA-BLR-2019-04521",
+    "address": {
+      "street": "Plot 42, 16th Main Road, Sector B",
+      "area": "Yelahanka New Town",
+      "city": "Bengaluru",
+      "pincode": "560064"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [77.5750, 13.0982]
+    },
+    "rating": 4.6,
+    "openingHours": "08:00 - 23:30",
+    "inventory": [
+      { "medicineName": "Dolo 650", "stock": 140, "priceOverride": 33.50 },
+      { "medicineName": "Calpol 500", "stock": 95, "priceOverride": 18.00 },
+      { "medicineName": "Glycomet GP 1", "stock": 75, "priceOverride": 112.00 },
+      { "medicineName": "Amlong 5", "stock": 80, "priceOverride": 40.00 },
+      { "medicineName": "Azithral 500", "stock": 55, "priceOverride": 120.00 },
+      { "medicineName": "Pan D", "stock": 85, "priceOverride": 195.00 },
+      { "medicineName": "Cetrizine 10", "stock": 100, "priceOverride": 22.00 },
+      { "medicineName": "Becosules", "stock": 150, "priceOverride": 48.00 },
+      { "medicineName": "Thyronorm 100mcg", "stock": 65, "priceOverride": 180.00 },
+      { "medicineName": "Candid B Cream", "stock": 40, "priceOverride": 138.00 }
+    ],
+    "stockFreshnessTimestamp": "2026-11-24T12:15:00.000Z"
+  },
+  {
+    "name": "Apollo Pharmacy Kogilu Road",
+    "phone": "+91-80-2856-7788",
+    "licenseNumber": "KA-BLR-2020-06234",
+    "address": {
+      "street": "Shop 3 & 4, Kogilu Main Road, Maruthi Nagar",
+      "area": "Yelahanka",
+      "city": "Bengaluru",
+      "pincode": "560064"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [77.6080, 13.1120]
+    },
+    "rating": 4.8,
+    "openingHours": "00:00 - 23:59 (24 Hours)",
+    "inventory": [
+      { "medicineName": "Dolo 650", "stock": 200, "priceOverride": 34.50 },
+      { "medicineName": "Combiflam", "stock": 80, "priceOverride": 46.00 },
+      { "medicineName": "Januvia 100mg", "stock": 35, "priceOverride": 380.00 },
+      { "medicineName": "Concor 5", "stock": 60, "priceOverride": 140.00 },
+      { "medicineName": "Taxim-O 200", "stock": 70, "priceOverride": 108.00 },
+      { "medicineName": "Gelusil MPS", "stock": 65, "priceOverride": 125.00 },
+      { "medicineName": "Asthalin Inhaler", "stock": 45, "priceOverride": 149.00 },
+      { "medicineName": "Neurobion Forte", "stock": 160, "priceOverride": 38.00 },
+      { "medicineName": "Eltroxin 25mcg", "stock": 75, "priceOverride": 115.00 },
+      { "medicineName": "Burnol", "stock": 90, "priceOverride": 64.00 }
+    ],
+    "stockFreshnessTimestamp": "2026-11-24T12:30:00.000Z"
+  },
+  {
+    "name": "Sanjeevani Medical & General Store",
+    "phone": "+91-80-2856-9900",
+    "licenseNumber": "KA-BLR-2018-02199",
+    "address": {
+      "street": "#28, Bangalore-Bellary Road, Near Yelahanka Police Station",
+      "area": "Yelahanka Old Town",
+      "city": "Bengaluru",
+      "pincode": "560064"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [77.5990, 13.1030]
+    },
+    "rating": 4.9,
+    "openingHours": "07:00 - 23:00",
+    "inventory": [
+      { "medicineName": "Dolo 650", "stock": 180, "priceOverride": 34.00 },
+      { "medicineName": "Meftal Spas", "stock": 50, "priceOverride": 50.00 },
+      { "medicineName": "Galvus Met 50/500", "stock": 40, "priceOverride": 270.00 },
+      { "medicineName": "Atorva 10", "stock": 110, "priceOverride": 92.00 },
+      { "medicineName": "Mox 500", "stock": 75, "priceOverride": 75.00 },
+      { "medicineName": "Omez 20", "stock": 130, "priceOverride": 56.00 },
+      { "medicineName": "Allegra 120", "stock": 85, "priceOverride": 215.00 },
+      { "medicineName": "Evion 400", "stock": 140, "priceOverride": 34.00 },
+      { "medicineName": "Susten 200", "stock": 30, "priceOverride": 375.00 },
+      { "medicineName": "Soframycin Skin Cream", "stock": 105, "priceOverride": 60.00 }
+    ],
+    "stockFreshnessTimestamp": "2026-11-24T12:20:00.000Z"
+  },
+  {
+    "name": "New Life Chemist & Druggist",
+    "phone": "+91-80-2846-5511",
+    "licenseNumber": "KA-BLR-2022-11450",
+    "address": {
+      "street": "Presidency University Gate Road, Rajanukunte",
+      "area": "Yelahanka Rural",
+      "city": "Bengaluru",
+      "pincode": "560064"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [77.5450, 13.1680]
+    },
+    "rating": 4.5,
+    "openingHours": "08:30 - 22:30",
+    "inventory": [
+      { "medicineName": "Dolo 650", "stock": 100, "priceOverride": 34.50 },
+      { "medicineName": "Sumo", "stock": 60, "priceOverride": 42.00 },
+      { "medicineName": "Glycomet GP 2", "stock": 55, "priceOverride": 135.00 },
+      { "medicineName": "Ecosprin 75", "stock": 160, "priceOverride": 10.00 },
+      { "medicineName": "Cifran 500", "stock": 45, "priceOverride": 52.00 },
+      { "medicineName": "Cremaffin", "stock": 35, "priceOverride": 158.00 },
+      { "medicineName": "Ascoril D", "stock": 50, "priceOverride": 125.00 },
+      { "medicineName": "Supradyn Daily", "stock": 90, "priceOverride": 55.00 },
+      { "medicineName": "Thyronorm 50mcg", "stock": 70, "priceOverride": 142.00 },
+      { "medicineName": "Fourderm Cream", "stock": 65, "priceOverride": 108.00 }
+    ],
+    "stockFreshnessTimestamp": "2026-11-24T12:10:00.000Z"
+  }
+]

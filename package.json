@@ -1,0 +1,37 @@
+{
+  "name": "quick-sanjeevani",
+  "version": "1.0.0",
+  "description": "Quick Sanjeevani - Offline-First Personal Healthcare & Medication Management Platform with WhatsApp Automation for Elderly Patients",
+  "private": true,
+  "workspaces": [
+    "server",
+    "mobile",
+    "whatsapp-bot"
+  ],
+  "scripts": {
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js",
+    "restart": "pm2 restart ecosystem.config.js",
+    "status": "pm2 status",
+    "logs": "pm2 logs",
+    "server": "npm --prefix server start",
+    "server:dev": "npm --prefix server run dev",
+    "bot": "npm --prefix whatsapp-bot start",
+    "bot:dev": "npm --prefix whatsapp-bot run dev",
+    "mobile": "npm --prefix mobile start",
+    "seed": "node server/src/seeds/seed.js",
+    "seed:validate": "node server/src/seeds/seed.js --validate",
+    "test": "npm --prefix server test",
+    "test:e2e": "node tests/e2e-runner.js"
+  },
+  "keywords": [
+    "healthcare",
+    "offline-first",
+    "whatsapp-bot",
+    "medication-reminder",
+    "elderly-care",
+    "whackiest-2026"
+  ],
+  "author": "Hot Chocolate Fudge (Ansh Vasant & MN Malathesh)",
+  "license": "MIT"
+}

@@ -1,0 +1,32 @@
+{
+  "name": "quick-sanjeevani-mobile",
+  "version": "1.0.0",
+  "description": "Offline-First Mobile Application for Quick Sanjeevani",
+  "main": "App.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest --runInBand --detectOpenHandles --forceExit"
+  },
+  "dependencies": {
+    "expo": "^51.0.0",
+    "react": "^18.2.0",
+    "react-native": "^0.74.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "moduleNameMapper": {
+      "^react$": "<rootDir>/src/utils/react-shim.js",
+      "^react-native$": "<rootDir>/src/utils/react-native-shim.js"
+    }
+  }
+}
