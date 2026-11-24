@@ -10,6 +10,13 @@
 > 🌐 **LIVE INTERACTIVE PRODUCT DEMO:** [**https://kij-jik.github.io/Quick_Sanjeevani/**](https://kij-jik.github.io/Quick_Sanjeevani/)  
 > *(Test the Elder Schedule, interactive WhatsApp voice bot with speech synthesis, medicine search across 62 formulations, prescription OCR, and company portal right in your browser!)*
 >
+> 📊 **Official 8-Slide Pitch Deck (Google Slides):** [**https://docs.google.com/presentation/d/1eu6DQqBdNyV4sTcf0t5ThCchsW8NDbP2/edit**](https://docs.google.com/presentation/d/1eu6DQqBdNyV4sTcf0t5ThCchsW8NDbP2/edit)  
+> *(Direct cloud access — click to view the complete Ideathon submission presentation)*
+>
+> 🎥 **Official 2-Minute Full Pitch & Live Demo Video:** [**Watch Full Pitch & Demo (MP4)**](presentation/quick_sanjeevani_full_pitch_demo.mp4)  
+> *(Stitched camera pitch + 1080p live GitHub Pages walkthrough with narration & burned-in subtitles)*  
+> 🔗 **Cloud Video Editor Timeline:** [**21st Video Project**](https://21st.dev/community/video/editor/30130349-6592-4786-ad13-0d1d78089ba2?host=codex#handoff=615ef9a6c37bf428466f7cc3057d117cdfb6888d3b49f15489e0de9209860e56)
+>
 > **wHACKiest 2026 Online Ideathon (26–27 Nov 2026)**  
 > **Team Name:** Hot Chocolate Fudge  
 > **College:** Presidency University, Bengaluru  
@@ -18,7 +25,21 @@
 > - **Ansh Vasant** (Lead) — `20251CSE0622`  
 > - **MN Malathesh** — `20251CSE0634`  
 >
-> 📊 **Official 8-Slide Pitch Deck:** [`presentation/HotChocolateFudge_Track3.pptx`](presentation/HotChocolateFudge_Track3.pptx)
+> 📥 **Local PPTX Backup:** [`presentation/HotChocolateFudge_Track3.pptx`](presentation/HotChocolateFudge_Track3.pptx)
+
+---
+
+## 🎥 Project Demonstration & Video Pitch
+
+Watch our comprehensive Ideathon pitch video featuring both the problem-statement breakdown and a live end-to-end walkthrough of the deployed system:
+
+| Asset | Link / Access | Description |
+| :--- | :--- | :--- |
+| **Full Pitch & Live Demo Video (1080p)** | [**Watch Full Video (MP4)**](presentation/quick_sanjeevani_full_pitch_demo.mp4) | Complete 2-minute submission video: camera pitch + live website demo + subtitles. |
+| **Live Demo Segment Only** | [**Watch Demo Only (MP4)**](presentation/quick_sanjeevani_live_demo.mp4) | 76-second high-definition walkthrough of all 5 deployed application modules. |
+| **Official Pitch Deck** | [**Open Google Slides Presentation**](https://docs.google.com/presentation/d/1eu6DQqBdNyV4sTcf0t5ThCchsW8NDbP2/edit) | 8 strict wHACKiest slides detailing market metrics, architecture, and revenue model. |
+| **Subtitles (.srt)** | [**Download subtitles.srt**](presentation/subtitles.srt) | Synchronized English captions for YouTube and video player accessibility. |
+| **Interactive Cloud Video Editor** | [**Open 21st Video Project**](https://21st.dev/community/video/editor/30130349-6592-4786-ad13-0d1d78089ba2?host=codex#handoff=615ef9a6c37bf428466f7cc3057d117cdfb6888d3b49f15489e0de9209860e56) | Live cloud timeline with 5 media scenes, brand palette, and captions. |
 
 ---
 
