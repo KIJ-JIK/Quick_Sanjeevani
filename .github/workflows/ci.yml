@@ -1,0 +1,25 @@
+name: Quick Sanjeevani CI (4-Tier Crash Resilience & 76-Test Suite)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      - name: Run 4-Tier Full Integration Test Suite (76 Tests)
+        run: node tests/e2e-runner.js --tier=all

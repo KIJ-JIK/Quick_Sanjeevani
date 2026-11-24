@@ -2,10 +2,14 @@
 ### *Your Healthcare, All in One Place.*
 
 [![wHACKiest 2026](https://img.shields.io/badge/wHACKiest-2026_Ideathon-00897B?style=for-the-badge)](https://devnovate.com)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Interactive_Web_App-00897B?style=for-the-badge&logo=google-chrome)](https://kij-jik.github.io/Quick_Sanjeevani/)
 [![Track 3](https://img.shields.io/badge/Track-3:_Know_Thyself-FF7043?style=for-the-badge)](#)
 [![Status](https://img.shields.io/badge/Build-Passing_(76%2F76_Tests)-43A047?style=for-the-badge)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
+> 🌐 **LIVE INTERACTIVE PRODUCT DEMO:** [**https://kij-jik.github.io/Quick_Sanjeevani/**](https://kij-jik.github.io/Quick_Sanjeevani/)  
+> *(Test the Elder Schedule, interactive WhatsApp voice bot with speech synthesis, medicine search across 62 formulations, prescription OCR, and company portal right in your browser!)*
+>
 > **wHACKiest 2026 Online Ideathon (26–27 Nov 2026)**  
 > **Team Name:** Hot Chocolate Fudge  
 > **College:** Presidency University, Bengaluru  

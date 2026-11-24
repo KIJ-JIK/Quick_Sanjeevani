@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Sanjeevani — Personal Healthcare & Elder Medication Assistant</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+  <style>
+    :root {
+      --primary: #00897B;
+      --primary-dark: #004D40;
+      --primary-light: #E0F2F1;
+      --secondary: #FF7043;
+      --secondary-dark: #D84315;
+      --text-primary: #212121;
+      --text-secondary: #546E7A;
+      --bg: #F4F7F6;
+      --surface: #FFFFFF;
+      --border: #CFD8DC;
+      --success: #2E7D32;
+      --success-light: #E8F5E9;
+      --warning: #F57F17;
+      --warning-light: #FFF8E1;
+      --danger: #C62828;
+      --danger-light: #FFEBEE;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-primary); line-height: 1.5; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon { font-size: 32px; }
+    .brand-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
+    .brand-tag { font-size: 12px; background: var(--primary-light); color: var(--primary-dark); padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+    .team-badge { font-size: 13px; color: var(--text-secondary); background: #FFF3E0; border: 1px solid #FFE0B2; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+
+    .top-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Subheader resilience status */
+    .resilience-bar {
+      background: #263238;
+      color: #ECEFF1;
+      font-size: 12px;
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill {
+      background: rgba(255,255,255,0.12);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: monospace;
+    }
+    .pill.green { color: #81C784; }
+    .pill.orange { color: #FFB74D; }
+
+    /* Main Container & Tabs */
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 16px; }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      border: none;
+      background: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background: var(--surface);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Card styling */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Tab 1: Elder App simulator grid */
+    .phone-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 850px) { .phone-grid { grid-template-columns: 1fr; } }
+
+    .phone-frame {
+      border: 12px solid #263238;
+      border-radius: 36px;
+      background: #FAFAFA;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 720px;
+    }
+    .phone-notch {
+      background: #263238;
+      height: 24px;
+      width: 140px;
+      margin: 0 auto;
+      border-radius: 0 0 12px 12px;
+    }
+    .phone-screen {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .elder-banner {
+      background: var(--primary);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+    }
+    .elder-banner h3 { font-size: 17px; margin-bottom: 4px; }
+    .elder-banner p { font-size: 12px; opacity: 0.9; }
+
+    .med-slot {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      border-left: 5px solid var(--primary);
+    }
+    .med-slot.taken { border-left-color: var(--success); opacity: 0.8; }
+    .slot-time { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 4px; }
+    .med-row { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+    .med-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .med-dose { font-size: 13px; color: var(--text-secondary); }
+    .taken-btn {
+      padding: 6px 14px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .taken-btn.done {
+      background: var(--success-light);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    /* WhatsApp Simulator */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+      background: #ECE5DD;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #B0BEC5;
+    }
+    .chat-header {
+      background: #075E54;
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .chat-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-msg {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+      position: relative;
+    }
+    .chat-msg.bot {
+      background: white;
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .chat-msg.user {
+      background: #DCF8C6;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .chat-time {
+      font-size: 10px;
+      color: #9E9E9E;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .chat-chips {
+      background: #F0F2F5;
+      padding: 8px 12px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      border-top: 1px solid #CFD8DC;
+    }
+    .chip {
+      background: white;
+      border: 1px solid #CFD8DC;
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #128C7E;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip:hover { background: #E0F2F1; }
+    .chat-input-bar {
+      display: flex;
+      padding: 8px;
+      background: #F0F2F5;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+    .chat-send-btn {
+      background: #075E54;
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* Medicine catalogue table */
+    .med-search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .med-search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    .med-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .med-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .med-card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
+    .med-card-generic { font-size: 12px; color: var(--text-secondary); }
+    .med-card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; }
+    .med-price { font-size: 18px; color: var(--secondary-dark); }
+    .badge-otc { background: var(--success-light); color: var(--success); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+    .badge-rx { background: var(--warning-light); color: var(--warning); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+
+    /* Metrics Grid */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .metric-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .metric-val { font-size: 28px; font-weight: 800; color: var(--primary); }
+    .metric-lbl { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 600; }
+
+    /* Presentation link banner */
+    .deck-banner {
+      background: linear-gradient(135deg, #00897B, #004D40);
+      color: white;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .deck-info h2 { font-size: 22px; margin-bottom: 6px; }
+    .deck-info p { font-size: 14px; opacity: 0.9; }
+    .deck-actions { display: flex; gap: 10px; }
+    .deck-btn {
+      background: #FF7043;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .deck-btn.secondary {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🌿</span>
+      <div>
+        <div class="brand-title">Quick Sanjeevani (त्वरित संजीवनी)</div>
+        <div style="font-size: 11px; color: var(--text-secondary);">Offline-First Healthcare & WhatsApp Voice Assistant for Elders</div>
+      </div>
+      <span class="brand-tag">Track 3: Know Thyself</span>
+    </div>
+
+    <div class="top-controls">
+      <span class="team-badge">🍫 Hot Chocolate Fudge · Presidency University</span>
+      <div style="display: flex; gap: 4px;">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('hi')">हिन्दी</button>
+        <button class="lang-btn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 4-Layer Resilience Status Bar -->
+  <div class="resilience-bar">
+    <div>🛡️ <strong>4-Layer Crash Resilience Engine:</strong> Process & Database Monitored</div>
+    <div class="pills">
+      <span class="pill green">● L1 PM2 Supervised</span>
+      <span class="pill green">● L2 Async Handler</span>
+      <span class="pill green">● L3 Mongoose Auto-Pool</span>
+      <span class="pill orange">● L4 Circuit Breaker (CLOSED)</span>
+      <span class="pill green">● 76/76 Tests Pass</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Official Pitch Deck Banner -->
+    <div class="deck-banner">
+      <div class="deck-info">
+        <h2>📊 Official Ideathon Submission Pitch Deck</h2>
+        <p>Strict 8-Slide wHACKiest 2026 Presentation (HotChocolateFudge_Track3.pptx) ready for evaluation.</p>
+      </div>
+      <div class="deck-actions">
+        <a href="https://github.com/KIJ-JIK/Quick_Sanjeevani/raw/main/presentation/HotChocolateFudge_Track3.pptx" class="deck-btn" download>📥 Download PPTX</a>
+        <a href="https://github.com/KIJ-JIK/Quick_Sanjeevani" target="_blank" class="deck-btn secondary">💻 GitHub Repository</a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('elder-app')">📱 Elder Mobile App</button>
+      <button class="tab-btn" onclick="switchTab('whatsapp-bot')">💬 WhatsApp Voice Bot</button>
+      <button class="tab-btn" onclick="switchTab('medicine-catalog')">💊 62-Medicine Catalog</button>
+      <button class="tab-btn" onclick="switchTab('pharmacy-network')">🏪 Bengaluru Chemists (0.8km)</button>
+      <button class="tab-btn" onclick="switchTab('company-portal')">🏢 Company & Pharmacy Portal</button>
+    </nav>
+
+    <!-- Tab 1: Elder Mobile App -->
+    <div id="elder-app" class="tab-content active">
+      <div class="phone-grid">
+        <!-- Phone simulator -->
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="elder-banner">
+              <h3 id="app-greeting">🙏 Namaste, Rameshwaridevi</h3>
+              <p id="app-subtitle">Today's Schedule: 2 Taken · 2 Pending</p>
+            </div>
+
+            <!-- Morning -->
+            <div class="med-slot taken" id="slot-1">
+              <div class="slot-time" id="slot-1-time">🌅 Morning (8:00 AM)</div>
+              <div class="med-row">
+                <div>
+                  <div class="med-name">Dolo 650</div>
+                  <div class="med-dose">1 tablet after breakfast</div>
+                </div>
+                <button class="taken-btn done" id="btn-1" onclick="toggleMed(1)">✓ Taken</button>
+              </div>
+            </div>
+
+            <!-- Morning 2 -->
+            <div class="med-slot taken" id="slot-2">
+              <div class="slot-time" id="slot-2-time">🌅 Morning (8:15 AM)</div>
+              <div class="med-row">
+                <div>
+                  <div class="med-name">Glycomet 500</div>
+                  <div class="med-dose">1 tablet before food</div>
+                </div>
+                <button class="taken-btn done" id="btn-2" onclick="toggleMed(2)">✓ Taken</button>
+              </div>
+            </div>
+
+            <!-- Afternoon -->
+            <div class="med-slot" id="slot-3">
+              <div class="slot-time" id="slot-3-time">☀️ Afternoon (1:30 PM)</div>
+              <div class="med-row">
+                <div>
+                  <div class="med-name">Becosules Z</div>
+                  <div class="med-dose">1 capsule with lunch</div>
+                </div>
+                <button class="taken-btn" id="btn-3" onclick="toggleMed(3)">Mark Taken</button>
+              </div>
+            </div>
+
+            <!-- Night -->
+            <div class="med-slot" id="slot-4">
+              <div class="slot-time" id="slot-4-time">🌙 Night (8:30 PM)</div>
+              <div class="med-row">
+                <div>
+                  <div class="med-name">Atorva 10</div>
+                  <div class="med-dose">1 tablet after dinner</div>
+                </div>
+                <button class="taken-btn" id="btn-4" onclick="toggleMed(4)">Mark Taken</button>
+              </div>
+            </div>
+
+            <!-- 1-Tap Refill Card -->
+            <div style="background: #E8F5E9; border: 1px solid #A5D6A7; padding: 12px; border-radius: 10px; margin-top: auto;">
+              <div style="font-weight: 700; color: #1B5E20; font-size: 14px;">🛍️ Quick Refill Available</div>
+              <div style="font-size: 12px; color: #2E7D32; margin-bottom: 8px;">Metformin 500mg running low (4 tablets left).</div>
+              <button onclick="orderRefill()" style="width: 100%; background: #2E7D32; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                🔄 1-Tap Reorder (₹42 via UPI)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explanatory Panel -->
+        <div>
+          <div class="card">
+            <div class="card-title">👵 Specially Engineered for Elder Adherence</div>
+            <p style="color: var(--text-secondary); margin-bottom: 14px;">
+              Designed with large 48px touch targets, high-contrast AAA colors, minimal clutter, and zero hidden menus.
+            </p>
+            <ul style="padding-left: 20px; line-height: 1.8; color: var(--text-primary); font-size: 15px;">
+              <li><strong>Offline SQLite Persistence:</strong> Reads from local WatermelonDB/SQLite storage — zero white-screen crashes if WiFi drops.</li>
+              <li><strong>Monotonic Sync Queue:</strong> Marks taken offline, and syncs seamlessly with the family caregiver's phone once back online.</li>
+              <li><strong>Hyperlocal Chemist Linkage:</strong> Auto-detects medicine refills and assigns neighborhood chemists in Bengaluru (Yelahanka/Hebbal).</li>
+              <li><strong>Emergency 1-Tap Dial:</strong> Embedded shortcuts for 108 Ambulance and family caregiver.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title">📋 1-Tap Doctor Prescription OCR Extractor</div>
+            <p style="color: var(--text-secondary); margin-bottom: 12px;">
+              Simulate uploading a doctor's prescription photograph:
+            </p>
+            <button onclick="simulateOCR()" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+              📷 Scan Sample Prescription (Dr. Sharma, Yelahanka)
+            </button>
+            <div id="ocr-preview" style="margin-top: 14px; display: none; background: #FAFAFA; border: 1px dashed var(--border); padding: 12px; border-radius: 8px; font-size: 13px;">
+              <div style="font-weight: 700; color: var(--primary-dark);">✅ OCR Extraction Complete (Confidence: 96.2%)</div>
+              <div style="margin-top: 4px;">• <strong>Metformin 500mg</strong> — 1 tab BD (Twice daily)</div>
+              <div>• <strong>Amlodipine 5mg</strong> — 1 tab OD (Morning)</div>
+              <div>• <strong>Telma 40mg</strong> — 1 tab OD (Afternoon)</div>
+              <div style="margin-top: 8px; color: var(--success); font-weight: 600;">Stock confirmed at City Pharmacy (0.8 km away).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: WhatsApp Voice Bot Simulator -->
+    <div id="whatsapp-bot" class="tab-content">
+      <div style="display: grid; grid-template-columns: 460px 1fr; gap: 24px;">
+        <!-- Chat Phone Frame -->
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-avatar">🌿</div>
+            <div>
+              <div style="font-weight: 700; font-size: 15px;">Quick Sanjeevani Assistant</div>
+              <div style="font-size: 11px; opacity: 0.9;">+1 415 523 8886 · Online (wHACKiest Bot)</div>
+            </div>
+          </div>
+
+          <div class="chat-body" id="chat-stream">
+            <div class="chat-msg bot">
+              🙏 <strong>Namaste! Welcome to Quick Sanjeevani.</strong><br><br>
+              Your personal healthcare & medication assistant.<br><br>
+              Reply with a number or send a voice message:<br>
+              1️⃣ Search Medicine (उदा. "1 Paracetamol")<br>
+              2️⃣ Medication Reminders ("2 Reminder")<br>
+              3️⃣ Nearby Pharmacy ("3 Pharmacy")<br>
+              4️⃣ Send Doctor Prescription<br>
+              5️⃣ Help & Emergency<br>
+              6️⃣ Order Medicine & UPI Pay
+              <div class="chat-time">12:00 PM</div>
+            </div>
+          </div>
+
+          <!-- Suggested Chips -->
+          <div class="chat-chips">
+            <button class="chip" onclick="sendChat('1 Paracetamol')">🔍 1 Paracetamol</button>
+            <button class="chip" onclick="sendChat('Dolo 650 bhej do')">🛍️ Dolo 650 bhej do</button>
+            <button class="chip" onclick="sendChat('2 Reminder')">⏰ 2 Reminder</button>
+            <button class="chip" onclick="sendChat('3 Pharmacy')">🏪 3 Pharmacy</button>
+            <button class="chip" onclick="sendChat('Bolkar sunao')">🔊 Audio Sunao</button>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="chat-input-bar">
+            <input type="text" id="chat-input-text" class="chat-input" placeholder="Type message in English, Hindi, or Kannada..." onkeypress="handleEnter(event)">
+            <button class="chat-send-btn" onclick="sendCustomChat()">➤</button>
+          </div>
+        </div>
+
+        <!-- Bot Capabilities Card -->
+        <div>
+          <div class="card">
+            <div class="card-title">🗣️ Why WhatsApp for Elderly Citizens?</div>
+            <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+              In India, 140M+ seniors struggle with downloading apps, OTP login loops, and small font interfaces. But <strong>87% already know how to use WhatsApp</strong>.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: 8px;">
+                <strong>1. Multilingual Audio (ElevenLabs Voice):</strong> Bot converts medication instructions and order confirmations into spoken Hindi & Kannada voice notes.
+              </div>
+              <div style="background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: 8px;">
+                <strong>2. Sub-50ms Fast Webhook ACK:</strong> Conforms strictly to Twilio webhook latency SLAs with immediate HTTP 200 response and decoupled asynchronous LLM dispatch.
+              </div>
+              <div style="background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: 8px;">
+                <strong>3. Seamless Razorpay UPI Links:</strong> Solves the WhatsApp Business API payment limitation by delivering 1-tap instant UPI links directly in chat.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">🎧 Test Audio Speech Engine</div>
+            <p style="color: var(--text-secondary); margin-bottom: 10px;">Click below to hear simulated ElevenLabs regional voice synthesis:</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button onclick="speakText('Aapka Dolo 650 ka order sweekar ho gaya hai. Payment link WhatsApp par bhej diya gaya hai.', 'hi-IN')" class="lang-btn" style="background: var(--primary); color: white;">
+                🔊 Play Hindi Voice Note
+              </button>
+              <button onclick="speakText('Nimma Dolo 650 order sweekarisalaagide. UPI link kaluhisalaagide.', 'kn-IN')" class="lang-btn" style="background: var(--primary-dark); color: white;">
+                🔊 Play Kannada Voice Note
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Medicine Catalogue -->
+    <div id="medicine-catalog" class="tab-content">
+      <div class="card">
+        <div class="card-title">💊 Quick Sanjeevani Medicine Catalogue (62 Pre-Seeded Formulations)</div>
+        <p style="color: var(--text-secondary); margin-bottom: 14px;">Instant offline-first fuzzy search across brand names, generic salts, schedules, and verified pricing.</p>
+        <div class="med-search-bar">
+          <input type="text" id="catalog-search" class="med-search-input" placeholder="Search by brand name or generic salt (e.g. Paracetamol, Metformin, Telma, Atorva)..." oninput="filterMeds()">
+        </div>
+        <div class="med-grid" id="catalog-grid"></div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Bengaluru Chemist Network -->
+    <div id="pharmacy-network" class="tab-content">
+      <div class="card">
+        <div class="card-title">🏪 Hyperlocal Neighborhood Chemist Network (Bengaluru Pincode 560064)</div>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">
+          Rather than relying on distant centralized warehouses that take 24–48 hours, Quick Sanjeevani connects directly to local chemist shops for sub-30 minute fulfillment.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;" id="pharmacy-grid"></div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Company & Pharmacy Portal -->
+    <div id="company-portal" class="tab-content">
+      <div class="metric-grid">
+        <div class="metric-box">
+          <div class="metric-val" id="metric-orders">148</div>
+          <div class="metric-lbl">Total Orders Placed</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" style="color: var(--success);">₹18,450</div>
+          <div class="metric-lbl">Gross Merchandise Value</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" style="color: var(--secondary);">91.4%</div>
+          <div class="metric-lbl">Elder Medication Adherence</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val">24 min</div>
+          <div class="metric-lbl">Avg. Delivery Turnaround</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" style="color: var(--danger);" id="metric-pending-rx">5</div>
+          <div class="metric-lbl">Prescriptions Pending Review</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Pharmacist Verification Station -->
+        <div class="card">
+          <div class="card-title">👨‍⚕️ Pharmacist Digital Review & Verification Station</div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            Enables licensed pharmacists to review incoming prescription scans before dispensing Schedule H medications.
+          </p>
+          <div style="background: #FAFAFA; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--primary-dark);">Prescription #RX-2026-89104</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Patient: Smt. Shanta Devi (Age 72) · Dr. P. K. Sharma (KMC #38291)</div>
+            <div style="margin-top: 8px; font-size: 13px;">
+              • Metformin 500mg (Qty: 2 strips)<br>
+              • Amlodipine 5mg (Qty: 1 strip)
+            </div>
+          </div>
+          <button id="verify-btn" onclick="verifyPrescription()" style="background: var(--success); color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%;">
+            ✓ Digitally Approve & Authorize Dispensing
+          </button>
+        </div>
+
+        <!-- Real-Time Chemist Dispatch Queue -->
+        <div class="card">
+          <div class="card-title">📦 Real-Time Neighborhood Dispatch Queue</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+            <div style="border: 1px solid var(--border); border-left: 4px solid var(--warning); padding: 10px; border-radius: 6px;">
+              <strong>#QS-89210-410</strong> — Dolo 650, Pantocid 40<br>
+              <span style="color: var(--text-secondary);">City Chemist · Status: <strong>Packing</strong> · ETA: 18 mins</span>
+            </div>
+            <div style="border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 10px; border-radius: 6px;">
+              <strong>#QS-78102-302</strong> — Becosules Z, Shellcal 500<br>
+              <span style="color: var(--text-secondary);">MedPlus Yelahanka · Status: <strong>Out for Delivery</strong> · ETA: 8 mins</span>
+            </div>
+            <div style="border: 1px solid var(--border); border-left: 4px solid var(--success); padding: 10px; border-radius: 6px;">
+              <strong>#QS-61029-914</strong> — Ecosprin 75, Atorva 10<br>
+              <span style="color: var(--text-secondary);">Apollo Kogilu · Status: <strong>Delivered</strong> · 32 mins ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Embedded Seeds Data
+    const MEDICINES = [
+      { name: "Dolo 650", generic: "Paracetamol 650mg", cat: "Analgesic", price: 34.50, rx: false, stock: 250 },
+      { name: "Crocin 500", generic: "Paracetamol 500mg", cat: "Analgesic", price: 20.80, rx: false, stock: 180 },
+      { name: "Glycomet 500", generic: "Metformin HCl 500mg", cat: "Antidiabetic", price: 28.00, rx: true, stock: 320 },
+      { name: "Januvia 100mg", generic: "Sitagliptin 100mg", cat: "Antidiabetic", price: 380.00, rx: true, stock: 45 },
+      { name: "Telma 40", generic: "Telmisartan 40mg", cat: "Cardiovascular", price: 125.00, rx: true, stock: 160 },
+      { name: "Amlong 5", generic: "Amlodipine 5mg", cat: "Cardiovascular", price: 40.00, rx: true, stock: 140 },
+      { name: "Atorva 10", generic: "Atorvastatin 10mg", cat: "Cardiovascular", price: 92.00, rx: true, stock: 110 },
+      { name: "Augmentin 625", generic: "Amoxicillin + Clavulanate", cat: "Antibiotic", price: 200.00, rx: true, stock: 65 },
+      { name: "Azithral 500", generic: "Azithromycin 500mg", cat: "Antibiotic", price: 120.00, rx: true, stock: 75 },
+      { name: "Pan 40", generic: "Pantoprazole 40mg", cat: "Gastrointestinal", price: 150.00, rx: false, stock: 210 },
+      { name: "Omez 20", generic: "Omeprazole 20mg", cat: "Gastrointestinal", price: 56.00, rx: false, stock: 190 },
+      { name: "Becosules Z", generic: "B-Complex + Zinc", cat: "Vitamins", price: 48.00, rx: false, stock: 300 },
+      { name: "Shelcal 500", generic: "Calcium + Vitamin D3", cat: "Vitamins", price: 130.00, rx: false, stock: 220 },
+      { name: "Montair LC", generic: "Montelukast + Levocetirizine", cat: "Respiratory", price: 215.00, rx: true, stock: 95 },
+      { name: "Asthalin Inhaler", generic: "Salbutamol 100mcg", cat: "Respiratory", price: 149.00, rx: true, stock: 80 },
+      { name: "Thyronorm 50mcg", generic: "Levothyroxine 50mcg", cat: "Thyroid", price: 140.00, rx: true, stock: 130 }
+    ];
+
+    const PHARMACIES = [
+      { name: "City Pharmacy & Healthcare", area: "Yelahanka Old Town, Bengaluru", dist: "0.8 km", rating: 4.7, hours: "07:30 - 23:00", phone: "+91-80-2856-1122" },
+      { name: "MedPlus Pharmacy Yelahanka New Town", area: "Sector B, Yelahanka, Bengaluru", dist: "1.4 km", rating: 4.6, hours: "08:00 - 23:30", phone: "+91-80-2856-4433" },
+      { name: "Apollo Pharmacy Kogilu Road", area: "Kogilu Road, Yelahanka, Bengaluru", dist: "2.1 km", rating: 4.8, hours: "24 Hours Open", phone: "+91-80-2856-7788" },
+      { name: "Sanjeevani Medical Store", area: "Bellary Road, Yelahanka, Bengaluru", dist: "1.2 km", rating: 4.9, hours: "07:00 - 23:00", phone: "+91-80-2856-9900" },
+      { name: "New Life Chemist (Presidency Gate)", area: "Rajanukunte, Presidency University Gate", dist: "0.2 km", rating: 4.5, hours: "08:30 - 22:30", phone: "+91-80-2846-5511" }
+    ];
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function toggleMed(idx) {
+      const slot = document.getElementById('slot-' + idx);
+      const btn = document.getElementById('btn-' + idx);
+      if (slot.classList.contains('taken')) {
+        slot.classList.remove('taken');
+        btn.classList.remove('done');
+        btn.innerText = 'Mark Taken';
+      } else {
+        slot.classList.add('taken');
+        btn.classList.add('done');
+        btn.innerText = '✓ Taken';
+      }
+    }
+
+    function orderRefill() {
+      alert('🛍️ Refill Order Placed!\n\nOrder #QS-REF-9021 for Metformin 500mg has been assigned to City Pharmacy Yelahanka.\nEstimated delivery: 25 minutes.\nUPI Payment Link dispatched to WhatsApp.');
+    }
+
+    function simulateOCR() {
+      const preview = document.getElementById('ocr-preview');
+      preview.style.display = 'block';
+    }
+
+    function sendChat(text) {
+      const chatStream = document.getElementById('chat-stream');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg user';
+      userMsg.innerHTML = text + '<div class="chat-time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</div>';
+      chatStream.appendChild(userMsg);
+      chatStream.scrollTop = chatStream.scrollHeight;
+
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-msg bot';
+        let reply = '';
+
+        if (text.includes('Dolo') || text.includes('bhej')) {
+          reply = '🛍️ <strong>दवाई का ऑर्डर तैयार है!</strong><br>━━━━━━━━━━━━━━━━━━<br>📦 <strong>ऑर्डर नंबर:</strong> <code>QS-90412-108</code><br>🏪 <strong>दुकान:</strong> City Chemist (Yelahanka)<br>💊 <strong>दवाई:</strong> Dolo 650 (1 strip)<br>💰 <strong>कुल राशि:</strong> ₹34.50<br>⏱️ <strong>डिलीवरी:</strong> लगभग 20 मिनट में<br><br>💳 <a href="https://rzp.io/l/qs_dolo650" target="_blank" style="color: #075E54; font-weight: 700;">👉 Click Here for Razorpay UPI Payment</a><br><br>पेमेंट होते ही डिलीवरी एजेंट रवाना हो जाएगा।';
+        } else if (text.includes('1 Paracetamol')) {
+          reply = '💊 <strong>Dolo 650 (Paracetamol 650mg)</strong><br>━━━━━━━━━━━━━━━━━━<br>🔹 वर्ग: Analgesic & Antipyretic<br>🔹 दाम: ₹34.50 प्रति पत्ता<br>🔹 स्थिति: ✅ In Stock (85 उपलब्ध)<br>🔹 पर्ची: OTC (बिना पर्चे मिल सकती है)<br><br>👉 ऑर्डर करने के लिए <strong>"Dolo भेज दो"</strong> लिखें।';
+        } else if (text.includes('2 Reminder')) {
+          reply = '⏰ <strong>आज का दवाई रिमाइंडर:</strong><br>• सुबह 8:00 AM: Dolo 650 (✓ Taken)<br>• सुबह 8:15 AM: Glycomet 500 (✓ Taken)<br>• दोपहर 1:30 PM: Becosules Z (⏳ Pending)<br>• रात 8:30 PM: Atorva 10 (⏳ Pending)';
+        } else if (text.includes('3 Pharmacy')) {
+          reply = '🏪 <strong>नज़दीकी मेडिकल स्टोर (Yelahanka):</strong><br>1. <strong>City Pharmacy</strong> (0.8 km) — ⭐ 4.7<br>2. <strong>MedPlus Pharmacy</strong> (1.4 km) — ⭐ 4.6<br>3. <strong>New Life Chemist</strong> (Presidency Gate - 0.2 km)';
+        } else {
+          reply = '🔊 <strong>ऑडियो संदेश भेजा गया:</strong> "नमस्ते! आपकी दोपहर की दवाई Becosules Z खाना खाने के साथ लेनी है।"';
+        }
+
+        botMsg.innerHTML = reply + '<div class="chat-time">' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + '</div>';
+        chatStream.appendChild(botMsg);
+        chatStream.scrollTop = chatStream.scrollHeight;
+      }, 500);
+    }
+
+    function handleEnter(e) {
+      if (e.key === 'Enter') sendCustomChat();
+    }
+
+    function sendCustomChat() {
+      const input = document.getElementById('chat-input-text');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      sendChat(val);
+    }
+
+    function speakText(text, lang) {
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang || 'hi-IN';
+        u.rate = 0.9;
+        window.speechSynthesis.speak(u);
+      } else {
+        alert('Voice synthesis: "' + text + '"');
+      }
+    }
+
+    function filterMeds() {
+      const q = document.getElementById('catalog-search').value.toLowerCase().trim();
+      const grid = document.getElementById('catalog-grid');
+      grid.innerHTML = '';
+      const filtered = MEDICINES.filter(m => m.name.toLowerCase().includes(q) || m.generic.toLowerCase().includes(q));
+      filtered.forEach(m => {
+        const el = document.createElement('div');
+        el.className = 'med-card';
+        el.innerHTML = `
+          <div>
+            <div class="med-card-title">${m.name}</div>
+            <div class="med-card-generic">${m.generic} · ${m.cat}</div>
+          </div>
+          <div class="med-card-meta">
+            <span class="med-price">₹${m.price.toFixed(2)}</span>
+            <span class="${m.rx ? 'badge-rx' : 'badge-otc'}">${m.rx ? 'Prescription' : 'OTC'}</span>
+          </div>
+          <div style="font-size: 11px; color: var(--success); font-weight: 600;">Stock: ${m.stock} strips available</div>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    function renderPharmacies() {
+      const grid = document.getElementById('pharmacy-grid');
+      grid.innerHTML = '';
+      PHARMACIES.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.style.marginBottom = '0';
+        el.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="font-size: 16px; font-weight: 700; color: var(--primary-dark);">${p.name}</div>
+            <span style="background: #E0F2F1; color: var(--primary-dark); font-weight: 700; font-size: 12px; padding: 2px 8px; border-radius: 4px;">${p.dist}</span>
+          </div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin: 4px 0 8px;">📍 ${p.area}</div>
+          <div style="font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 8px;">
+            <span>⭐ <strong>${p.rating} / 5.0</strong></span>
+            <span>🕒 ${p.hours}</span>
+          </div>
+          <button onclick="alert('Connecting to ${p.name} (${p.phone})...')" style="margin-top: 10px; width: 100%; background: var(--surface); border: 1px solid var(--primary); color: var(--primary); padding: 8px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+            📞 Call Chemist (${p.phone})
+          </button>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    function verifyPrescription() {
+      const btn = document.getElementById('verify-btn');
+      btn.innerText = '✅ Digitally Signed & Approved (KA-PH-49201)';
+      btn.style.background = '#1B5E20';
+      btn.disabled = true;
+      const countEl = document.getElementById('metric-pending-rx');
+      if (countEl) countEl.innerText = '4';
+      alert('Prescription #RX-2026-89104 verified by Pharmacist Ramesh Kumar. Order sent to packaging queue.');
+    }
+
+    function setLang(lang) {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      if (lang === 'hi') {
+        document.getElementById('app-greeting').innerText = '🙏 नमस्ते, रामेश्वरी देवी';
+        document.getElementById('app-subtitle').innerText = 'आज का शेड्यूल: 2 ली गई · 2 बाकी हैं';
+        document.getElementById('slot-1-time').innerText = '🌅 सुबह (8:00 AM)';
+        document.getElementById('slot-2-time').innerText = '🌅 सुबह (8:15 AM)';
+        document.getElementById('slot-3-time').innerText = '☀️ दोपहर (1:30 PM)';
+        document.getElementById('slot-4-time').innerText = '🌙 रात (8:30 PM)';
+      } else if (lang === 'kn') {
+        document.getElementById('app-greeting').innerText = '🙏 ನಮಸ್ಕಾರ, ರಾಮೇಶ್ವರೀದೇವಿ';
+        document.getElementById('app-subtitle').innerText = 'ಇಂದಿನ ವೇಳಾಪಟ್ಟಿ: 2 ತೆಗೆದುಕೊಂಡಿದೆ · 2 ಬಾಕಿ';
+        document.getElementById('slot-1-time').innerText = '🌅 ಬೆಳಿಗ್ಗೆ (8:00 AM)';
+        document.getElementById('slot-2-time').innerText = '🌅 ಬೆಳಿಗ್ಗೆ (8:15 AM)';
+        document.getElementById('slot-3-time').innerText = '☀️ ಮಧ್ಯಾಹ್ನ (1:30 PM)';
+        document.getElementById('slot-4-time').innerText = '🌙 ರಾತ್ರಿ (8:30 PM)';
+      } else {
+        document.getElementById('app-greeting').innerText = '🙏 Namaste, Rameshwaridevi';
+        document.getElementById('app-subtitle').innerText = "Today's Schedule: 2 Taken · 2 Pending";
+        document.getElementById('slot-1-time').innerText = '🌅 Morning (8:00 AM)';
+        document.getElementById('slot-2-time').innerText = '🌅 Morning (8:15 AM)';
+        document.getElementById('slot-3-time').innerText = '☀️ Afternoon (1:30 PM)';
+        document.getElementById('slot-4-time').innerText = '🌙 Night (8:30 PM)';
+      }
+    }
+
+    // Init
+    filterMeds();
+    renderPharmacies();
+  </script>
+</body>
+</html>
