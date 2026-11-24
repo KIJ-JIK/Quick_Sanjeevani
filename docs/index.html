@@ -917,12 +917,13 @@
 
     function verifyPrescription() {
       const btn = document.getElementById('verify-btn');
-      btn.innerText = '✅ Digitally Signed & Approved (KA-PH-49201)';
-      btn.style.background = '#1B5E20';
-      btn.disabled = true;
+      if (btn) {
+        btn.innerText = '✅ Digitally Signed & Approved (KA-PH-49201)';
+        btn.style.background = '#1B5E20';
+        btn.disabled = true;
+      }
       const countEl = document.getElementById('metric-pending-rx');
       if (countEl) countEl.innerText = '4';
-      alert('Prescription #RX-2026-89104 verified by Pharmacist Ramesh Kumar. Order sent to packaging queue.');
     }
 
     function setLang(lang) {
